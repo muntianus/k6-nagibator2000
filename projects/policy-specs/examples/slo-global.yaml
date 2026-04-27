@@ -1,0 +1,24 @@
+apiVersion: launchgate.dev/v1alpha1
+kind: SLOPolicy
+metadata:
+  name: global-defaults
+spec:
+  defaults:
+    hard:
+      operator: "<="
+      value: 1000
+    soft:
+      operator: "<="
+      value: 700
+  rules:
+    - name: smoke-latency
+      metric: http_req_duration_p95
+      selector:
+        scenario: smoke
+      thresholds:
+        hard:
+          operator: "<="
+          value: 900
+        soft:
+          operator: "<="
+          value: 600

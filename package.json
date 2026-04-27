@@ -2,5 +2,9 @@
   "dependencies": {
     "bootstrap": "^5.3.8",
     "har-to-k6": "^0.14.10"
+  },
+  "scripts": {
+    "policy:test": "node --test projects/policy-specs/test/policy-specs.test.cjs",
+    "policy:validate": "node projects/policy-specs/policy-specs.cjs validate projects/policy-specs/examples/traffic-model.json"
   }
 }
