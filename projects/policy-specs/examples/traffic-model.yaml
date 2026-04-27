@@ -1,0 +1,19 @@
+apiVersion: launchgate.dev/v1alpha1
+kind: TrafficModel
+metadata:
+  name: checkout-traffic
+  project: grocery
+spec:
+  defaultTags:
+    env: staging
+    service: checkout
+  scenarios:
+    - name: smoke
+      executor: ramping-vus
+      tags:
+        flow: auth
+      stages:
+        - duration: 30s
+          target: 5
+        - duration: 2m
+          target: 20

@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://launchgate.dev/schemas/v1alpha1/slo-policy.schema.json",
+  "title": "SLOPolicy v1alpha1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "launchgate.dev/v1alpha1" },
+    "kind": { "const": "SLOPolicy" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "project": { "type": "string", "minLength": 1 },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["defaults", "rules"],
+      "properties": {
+        "defaults": { "$ref": "#/$defs/thresholdSet" },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "metric", "selector", "thresholds"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "metric": { "type": "string", "minLength": 1 },
+              "selector": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["scenario"],
+                "properties": {
+                  "scenario": { "type": "string", "minLength": 1 },
+                  "tags": {
+                    "type": "object",
+                    "propertyNames": { "pattern": "^[a-zA-Z0-9_.-]+$" },
+                    "additionalProperties": { "type": "string" }
+                  }
+                }
+              },
+              "thresholds": { "$ref": "#/$defs/thresholdSet" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "thresholdSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hard", "soft"],
+      "properties": {
+        "hard": { "$ref": "#/$defs/threshold" },
+        "soft": { "$ref": "#/$defs/threshold" }
+      }
+    },
+    "threshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operator", "value"],
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": ["<=", "<", ">=", ">", "=="]
+        },
+        "value": { "type": "number" }
+      }
+    }
+  }
+}
